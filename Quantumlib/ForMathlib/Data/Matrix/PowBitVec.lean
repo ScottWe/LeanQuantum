@@ -54,6 +54,7 @@ theorem powBitVec_mul_powBitVec (A B : CMatrix n n) {m} (x : BitVec m) :
     case zero =>
       rw [BitVec.eq_nil x, BitVec.nil]
       simp
+      apply Matrix.mul_one
 
     case succ m' ih =>
       simp_rw [powBitVec, ←ih]
