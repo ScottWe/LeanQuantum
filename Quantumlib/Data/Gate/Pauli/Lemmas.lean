@@ -532,11 +532,12 @@ namespace PauliMap
 @[simp]
 theorem normalized.f_zero (P : Pauli n) : normalized.f P 0 = 0 := by
   simp [f]
+  rfl
 
 @[simp]
 theorem normalized_neg : normalized (-Pm) = -normalized Pm := by
   simp only [normalized]
-  rw [Finsupp.sum_neg_index (by simp)]
+  erw [Finsupp.sum_neg_index (by simp)]
   simp only [← Finsupp.sum_neg]
   congr; ext
   unfold normalized.f
@@ -552,25 +553,34 @@ theorem normalized_single : normalized (Finsupp.single P a) =
   Finsupp.single P.zeroed (P.evalPhase * a) := by
   simp only [normalized]
   unfold normalized.f
+  rw [Finsupp.sum_single_index]
   simp
+  rfl
 
 @[simp]
 theorem normalized_add {Pm₁ Pm₂ : PauliMap n} :
   normalized (Pm₁ + Pm₂) = normalized Pm₁ + normalized Pm₂ := by
     simp only [normalized]
-    rw [Finsupp.sum_add_index'
-        (by simp)
-        (by intros; unfold normalized.f; simp [mul_add])]
+    erw [Finsupp.sum_add_index']
+    case h_zero =>
+      simp
+    case h_add =>
+      intro a b1 b2
+      unfold normalized.f
+      simp [mul_add]
+      rfl
 
 theorem m_eq_0_of_in_normalized_support {Pm : PauliMap n} {P : Pauli n} :
   (P ∈ (PauliMap.normalized Pm).support) → P.m = 0 := by
-    intros h
+    intro h
     rw [Finsupp.mem_support_iff] at h
     induction Pm using Finsupp.induction generalizing P
     case zero =>
       simp [normalized] at h
+      erw [Finsupp.zero_apply] at h
+      contradiction
     case single_add P₁ a Pm' h₁ h₂ ih =>
-      rw [normalized_add, normalized_single,
+      erw [normalized_add, normalized_single,
           Finsupp.add_apply, Finsupp.single_apply] at h
       by_cases heq : P₁.zeroed = P
       · rw [if_pos heq] at h
