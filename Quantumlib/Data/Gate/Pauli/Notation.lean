@@ -13,14 +13,14 @@ syntax " ( " pauli " ) " : pauli
 
 syntax "[P| " pauli " ]" : term
 
-def parse_ident (id : Lean.TSyntax `ident) := do
+def parse_ident (id : Lean.TSyntax `ident) : Lean.MacroM (Nat × Nat × Nat × Nat) := do
   let mut atoms := id.getId.toString
   let mut xs := []
   let mut zs := []
   let mut phase := 0
   if atoms.startsWith "i" then
     phase := 3
-    atoms := atoms.drop 1
+    atoms := ( atoms.drop 1 ).toString
   for atom in atoms.toList.reverse do
     let (x, z) ←
       match atom with
