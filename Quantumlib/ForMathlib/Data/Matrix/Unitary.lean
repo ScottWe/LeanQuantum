@@ -40,7 +40,7 @@ theorem smul_of_isUnitary : ∀ (c : ℂ) (M : CSquare n),
   M.IsUnitary → c ∈ unitary ℂ → (c • M).IsUnitary := by
     intros c M hM hc
     simp_rw [mem_unitaryGroup_iff'] at hM ⊢
-    rw [unitary.mem_iff_self_mul_star] at hc
+    rw [Unitary.mem_iff_self_mul_star] at hc
     rw [star_smul, mul_smul, smul_mul, ←smul_assoc, smul_eq_mul, hc, hM]
     simp
 

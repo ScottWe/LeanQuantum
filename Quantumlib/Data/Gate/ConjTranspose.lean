@@ -20,23 +20,26 @@ lemma controlM_conjTranspose : ∀ (M : CSquare n),
     · split_ifs <;> simp_all
     · cases hlt : decide (i < n) <;> cases hle : decide (n ≤ i) <;> simp_all
       split_ifs
-      · apply not_lt_of_le at hlt
+      · apply Nat.not_lt_of_le at hlt
         contradiction
       · simp
 
 @[simp]
 lemma rotate_conjTranspose : ∀ θ φ δ,
   (rotate θ φ δ)ᴴ = rotate (-θ) (-δ) (-φ) := by
-    intros
+    have h : ∀ (x : ℂ), (Complex.sin x) = -(Complex.sin (-x)) := by simp
+    intro θ φ δ
     simp only [rotate]
     ext i j
     rw [Matrix.conjTranspose_apply]
     fin_cases i <;> fin_cases j
       <;> simp [←Complex.exp_conj, ←Complex.cos_conj, ←Complex.sin_conj]
       <;> field_simp [OfNat.ofNat]
-      <;> rw [neg_div]
-    all_goals try rw [Complex.cos_neg]
-    all_goals try rw [Complex.sin_neg]
+      <;> rw [←neg_div]
+      <;> rw [starRingEnd_apply]
+      <;> simp
+    all_goals try rw [←Complex.cos_neg]
+    all_goals try rw [h]
     all_goals ring_nf
 
 @[simp]

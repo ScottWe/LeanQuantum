@@ -5,8 +5,6 @@ import Quantumlib.Tactic.Basic
 
 import Mathlib.LinearAlgebra.Matrix.Hermitian
 
-open Matrix
-
 open Lean Elab Command in
 elab "make_hermitian " gates:ident+ : command => do
   for gate in gates do
@@ -20,6 +18,8 @@ elab "make_hermitian " gates:ident+ : command => do
     elabCommand decl
 
 make_hermitian hadamard cnot swap σx σy σz
+
+open Matrix
 
 lemma controlM_isHermitian : ∀ (M : CSquare n), 
   M.IsHermitian → (controlM M).IsHermitian := by
